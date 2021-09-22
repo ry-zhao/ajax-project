@@ -1,3 +1,4 @@
+var $newRecipeForm = document.querySelector('#new-recipe-form');
 var $recipeTitle = document.querySelector('#recipe-title');
 var $recipeTitleInput = document.querySelector('#title');
 var $recipePhoto = document.querySelector('#recipe-photo');
@@ -61,6 +62,11 @@ function saveRecipe(event) {
     instructions.push($instructionList.children[j].textContent);
   }
   data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $recipePhotoUrlInput.value, ingredients, instructions));
+  $newRecipeForm.reset();
+  $recipeTitle.textContent = 'New Recipe';
+  $ingredientList.innerHTML = '';
+  $instructionList.innerHTML = '';
+  $recipePhoto.setAttribute('src', 'images/placeholder.jpg');
 }
 
 $saveButton.addEventListener('click', saveRecipe);
