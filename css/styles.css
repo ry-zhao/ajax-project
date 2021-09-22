@@ -14,6 +14,15 @@ input {
   width: 100%;
 }
 
+.add-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 5px;
+  border: none;
+  color: #f7f3e3;
+  background-color: #6f1a07;
+}
+
 .flex {
   display: flex;
 }
@@ -32,6 +41,10 @@ input {
 
 .width-90-percent {
   width: 90%;
+}
+
+.width-89-percent {
+  width: 89%;
 }
 
 .margin-auto {
