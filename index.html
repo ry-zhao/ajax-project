@@ -8,11 +8,43 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rosario:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
-  <header>
+<body class="bistre rosario bg-old-lace">
+  <header class="bg-copper">
+    <div class="row height-100-percent width-90-percent margin-auto align-items-center">
+      <div class="perma-col-one-half">
+        <span class="">KitchenGod.io</span>
+      </div>
+      <div class="perma-col-one-half">
+        <div class="row">
+          <div class="perma-col-one-half flex justify-content-end">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="perma-col-one-half flex justify-content-end">
+            <i class="fas fa-search "></i>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
   <main>
+    <div data-view="new-recipe" class="margin-auto width-90-percent">
+      <form>
+        <div class="row flex-wrap">
+          <div class="col-full">
+            <h2>Recipe Title</h2>
+            <img class="new-img" src="https://i.insider.com/5e74f1aa235c180a1708f958?width=1000&format=jpeg&auto=webp">
+            <label for="title">Title</label>
+            <input name="title" id="title" class="width-100-percent">
+          </div>
+        </div>
+      </form>
+    </div>
+
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
