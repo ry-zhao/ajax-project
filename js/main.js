@@ -5,6 +5,9 @@ var $recipePhotoUrlInput = document.querySelector('#photo-url');
 var $ingredientList = document.querySelector('#ingredient-list');
 var $addIngredientInput = document.querySelector('#add-ingredient');
 var $addIngredientButton = document.querySelector('#add-ingredient-button');
+var $instructionList = document.querySelector('#instruction-list');
+var $addInstructionInput = document.querySelector('#add-instruction');
+var $addInstructionButton = document.querySelector('#add-instruction-button');
 
 var recipe = {
   title: '',
@@ -21,13 +24,25 @@ function updateRecipePhoto(event) {
   $recipePhoto.setAttribute('src', event.target.value);
 }
 
+function createAndAppend(type, textContent, parent) {
+  var newIngredient = document.createElement(type);
+  newIngredient.textContent = textContent;
+  parent.append(newIngredient);
+}
+
 function addIngredient(event) {
   event.preventDefault();
-  var newIngredient = document.createElement('li');
-  newIngredient.textContent = $addIngredientInput.value;
+  createAndAppend('li', $addIngredientInput.value, $ingredientList);
   $addIngredientInput.value = '';
-  $ingredientList.append(newIngredient);
 }
+
+function addInstruction(event) {
+  event.preventDefault();
+  createAndAppend('li', $addInstructionInput.value, $instructionList);
+  $addInstructionInput.value = '';
+}
+
+$addInstructionButton.addEventListener('click', addInstruction);
 
 $addIngredientButton.addEventListener('click', addIngredient);
 
