@@ -10,8 +10,13 @@ input {
   border-radius: 5px;
 }
 
+button:active {
+  transform: translateY(5px);
+}
+
 .recipe-photo {
   width: 100%;
+  border: 4px solid white;
 }
 
 .add-button {
@@ -21,6 +26,16 @@ input {
   border: none;
   color: #f7f3e3;
   background-color: #6f1a07;
+}
+
+.save-button {
+  color: #f7f3e3;
+  background-color: #a8763e;
+  font-family: 'Rosario', sans-serif;
+}
+
+.save-button:active {
+  transform: translateY(5px);
 }
 
 .flex {
@@ -51,12 +66,13 @@ input {
   margin: auto;
 }
 
-.justify-content-end {
-  justify-content: end;
+.margin-top-bottom-1rem {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
-.align-items-center {
-  align-items: center;
+.margin-bottom-1rem {
+  margin-bottom: 1rem;
 }
 
 .margin-left-1rem {
@@ -65,6 +81,14 @@ input {
 
 .margin-right-1rem {
   margin-right: 1rem;
+}
+
+.justify-content-end {
+  justify-content: end;
+}
+
+.align-items-center {
+  align-items: center;
 }
 
 .rosario {
@@ -85,4 +109,14 @@ input {
 
 .barn-red {
   color: #6f1a07;
+}
+
+@media screen and (min-width: 900px) {
+  .flex-wrap {
+    flex-wrap: nowrap;
+  }
+
+  .wide-margin-right-2rem {
+    margin-right: 2rem;
+  }
 }
