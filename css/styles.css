@@ -1,0 +1,122 @@
+header {
+  height: 3rem;
+  font-size: 1.25rem;
+  align-items: center;
+}
+
+input {
+  height: 2rem;
+  border: none;
+  border-radius: 5px;
+}
+
+button:active {
+  transform: translateY(5px);
+}
+
+.recipe-photo {
+  width: 100%;
+  border: 4px solid white;
+}
+
+.add-button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 5px;
+  border: none;
+  color: #f7f3e3;
+  background-color: #6f1a07;
+}
+
+.save-button {
+  color: #f7f3e3;
+  background-color: #a8763e;
+  font-family: 'Rosario', sans-serif;
+}
+
+.save-button:active {
+  transform: translateY(5px);
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.height-100-percent {
+  height: 100%;
+}
+
+.width-100-percent {
+  width: 100%;
+}
+
+.width-90-percent {
+  width: 90%;
+}
+
+.width-89-percent {
+  width: 89%;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.margin-top-bottom-1rem {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.margin-bottom-1rem {
+  margin-bottom: 1rem;
+}
+
+.margin-left-1rem {
+  margin-left: 1rem;
+}
+
+.margin-right-1rem {
+  margin-right: 1rem;
+}
+
+.justify-content-end {
+  justify-content: end;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.rosario {
+  font-family: 'Rosario', sans-serif;
+}
+
+.bg-copper {
+  background-color: #a8763e;
+}
+
+.bg-old-lace {
+  background-color: #f7f3e3;
+}
+
+.bistre {
+  color: #2b2118;
+}
+
+.barn-red {
+  color: #6f1a07;
+}
+
+@media screen and (min-width: 900px) {
+  .flex-wrap {
+    flex-wrap: nowrap;
+  }
+
+  .wide-margin-right-2rem {
+    margin-right: 2rem;
+  }
+}

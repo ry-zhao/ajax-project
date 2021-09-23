@@ -8,11 +8,70 @@
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rosario:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
-<body>
-  <header>
+<body class="bistre rosario bg-old-lace">
+  <header class="bg-copper">
+    <div class="row height-100-percent width-90-percent margin-auto align-items-center">
+      <div class="col-one-half">
+        <span class="">KitchenGod.io</span>
+      </div>
+      <div class="col-one-half">
+        <div class="row">
+          <div class="col-one-half flex justify-content-end">
+            <i class="fas fa-book"></i>
+          </div>
+          <div class="col-one-half flex justify-content-end">
+            <i class="fas fa-search "></i>
+          </div>
+        </div>
+      </div>
+    </div>
   </header>
   <main>
+    <div data-view="new-recipe" class="margin-auto width-90-percent">
+      <form id="new-recipe-form">
+        <div class="row flex-wrap">
+          <div class="col-full col-wide-one-third wide-margin-right-2rem">
+            <h2 id="recipe-title">New Recipe</h2>
+            <img id="recipe-photo" class="recipe-photo"
+              src="images/placeholder.jpg">
+            <label for="title">Title</label>
+            <input name="title" id="title" class="width-100-percent margin-bottom-1rem">
+            <label for="photo-url">Photo URL</label>
+            <input name="photo-url" id="photo-url" class="width-100-percent">
+          </div>
+          <div class="col-full col-wide-two-thirds">
+            <h4>Ingredients</h4>
+              <ul id="ingredient-list">
+
+              </ul>
+            <label for="add-ingredient">Add Ingredient</label>
+            <div class="row">
+              <input name="add-ingredient" id="add-ingredient" class="width-100-percent">
+              <button id="add-ingredient-button" class="add-button margin-left-1rem">
+                <i class="fas fa-plus-circle"></i>
+              </button>
+            </div>
+            <h4>Instructions</h4>
+            <ul id="instruction-list">
+
+            </ul>
+            <label for="add-instruction">Add Instruction</label>
+            <div class="row">
+              <input name="add-instruction" id="add-instruction" class="width-100-percent">
+              <button id="add-instruction-button" class="add-button margin-left-1rem">
+                <i class="fas fa-plus-circle"></i>
+              </button>
+            </div>
+            <input id="save-button" class="save-button width-100-percent margin-top-bottom-1rem" type="submit" value="SAVE">
+          </div>
+        </div>
+      </form>
+    </div>
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
