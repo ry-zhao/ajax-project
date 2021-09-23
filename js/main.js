@@ -6,6 +6,12 @@ var $instructionList = document.querySelector('#instruction-list');
 var $savedRecipesView = document.querySelector('#saved-recipes');
 var $savedRecipesLink = document.querySelector('#saved-recipes-link');
 var $views = document.querySelectorAll('.view');
+var $readRecipeTitle = document.querySelector('#read-recipe-title');
+var $readRecipePhoto = document.querySelector('#read-recipe-photo');
+var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
+var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
+
+var currentRecipe;
 
 populateSavedRecipesView();
 
@@ -27,6 +33,18 @@ function readRecipe(event) {
   if (!event.target.matches('.fa-info-circle')) {
     return;
   }
+  for (var n = 0; n < data.recipes.length; n++) {
+    if (data.recipes[n].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
+      currentRecipe = data.recipes[n];
+      break;
+    }
+  }
+  $readRecipeTitle.textContent = currentRecipe.title;
+  $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
+  $readRecipeIngredientList.innerHTML = '';
+  $readRecipeInstructionList.innerHTML = '';
+  populateList(currentRecipe.ingredients, $readRecipeIngredientList);
+  populateList(currentRecipe.instructions, $readRecipeInstructionList);
   swapView(event);
 }
 
@@ -76,9 +94,7 @@ function createAndAppendCard(recipe) {
   var $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
   var $ingredients = document.createElement('ul');
-  for (var k = 0; k < recipe.ingredients.length; k++) {
-    createAndAppendElement('li', recipe.ingredients[k], $ingredients);
-  }
+  populateList(recipe.ingredients, $ingredients);
 
   var $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
@@ -98,6 +114,12 @@ function createAndAppendCard(recipe) {
   $card.append($colFull);
 
   $savedRecipesView.prepend($card);
+}
+
+function populateList(array, list) {
+  for (var k = 0; k < array.length; k++) {
+    createAndAppendElement('li', array[k], list);
+  }
 }
 
 function Recipe(id, title, photoUrl, ingredients, instructions) {
