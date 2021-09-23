@@ -38,6 +38,10 @@ button:active {
   transform: translateY(5px);
 }
 
+.hidden {
+  display: none;
+}
+
 .flex {
   display: flex;
 }
@@ -58,8 +62,8 @@ button:active {
   width: 90%;
 }
 
-.width-89-percent {
-  width: 89%;
+.min-height-15rem {
+  min-height: 15rem;
 }
 
 .margin-auto {
@@ -101,6 +105,10 @@ button:active {
 
 .bg-old-lace {
   background-color: #f7f3e3;
+}
+
+.bg-white {
+  background-color: white;
 }
 
 .bistre {

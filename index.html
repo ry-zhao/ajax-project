@@ -32,7 +32,13 @@
     </div>
   </header>
   <main>
-    <div data-view="new-recipe" class="margin-auto width-90-percent">
+    <div data-view="saved-recipes" class="margin-auto width-90-percent">
+      <div class="row bg-white min-height-15rem margin-top-bottom-1rem">
+        <div class="col-one-third"></div>
+        <div class="col-two-thirds"></div>
+      </div>
+    </div>
+    <div data-view="new-recipe" class="margin-auto width-90-percent hidden">
       <form id="new-recipe-form">
         <div class="row flex-wrap">
           <div class="col-full col-wide-one-third wide-margin-right-2rem">
@@ -40,18 +46,18 @@
             <img id="recipe-photo" class="recipe-photo"
               src="images/placeholder.jpg">
             <label for="title">Title</label>
-            <input name="title" id="title" class="width-100-percent margin-bottom-1rem">
+            <input required="required" name="title" id="title" class="width-100-percent margin-bottom-1rem">
             <label for="photo-url">Photo URL</label>
-            <input name="photo-url" id="photo-url" class="width-100-percent">
+            <input required="required" name="photo-url" id="photo-url" class="width-100-percent">
           </div>
           <div class="col-full col-wide-two-thirds">
             <h4>Ingredients</h4>
-              <ul id="ingredient-list">
+            <ul id="ingredient-list">
 
-              </ul>
-            <label for="add-ingredient">Add Ingredient</label>
+            </ul>
+            <label required="required" for="add-ingredient">Add Ingredient</label>
             <div class="row">
-              <input name="add-ingredient" id="add-ingredient" class="width-100-percent">
+              <input required="required" name="add-ingredient" id="add-ingredient" class="width-100-percent">
               <button id="add-ingredient-button" class="add-button margin-left-1rem">
                 <i class="fas fa-plus-circle"></i>
               </button>
@@ -60,14 +66,14 @@
             <ul id="instruction-list">
 
             </ul>
-            <label for="add-instruction">Add Instruction</label>
+            <label required="required" for="add-instruction">Add Instruction</label>
             <div class="row">
               <input name="add-instruction" id="add-instruction" class="width-100-percent">
               <button id="add-instruction-button" class="add-button margin-left-1rem">
                 <i class="fas fa-plus-circle"></i>
               </button>
             </div>
-            <input id="save-button" class="save-button width-100-percent margin-top-bottom-1rem" type="submit" value="SAVE">
+            <input required="required" id="save-button" class="save-button width-100-percent margin-top-bottom-1rem" type="submit" value="SAVE">
           </div>
         </div>
       </form>

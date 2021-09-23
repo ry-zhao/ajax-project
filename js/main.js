@@ -1,15 +1,8 @@
 var $newRecipeForm = document.querySelector('#new-recipe-form');
 var $recipeTitle = document.querySelector('#recipe-title');
-var $recipeTitleInput = document.querySelector('#title');
 var $recipePhoto = document.querySelector('#recipe-photo');
-var $recipePhotoUrlInput = document.querySelector('#photo-url');
 var $ingredientList = document.querySelector('#ingredient-list');
-var $addIngredientInput = document.querySelector('#add-ingredient');
-var $addIngredientButton = document.querySelector('#add-ingredient-button');
 var $instructionList = document.querySelector('#instruction-list');
-var $addInstructionInput = document.querySelector('#add-instruction');
-var $addInstructionButton = document.querySelector('#add-instruction-button');
-var $saveButton = document.querySelector('#save-button');
 
 function Recipe(id, title, photoUrl, ingredients, instructions) {
   this.id = id;
@@ -35,24 +28,27 @@ function createAndAppendElement(type, textContent, parent) {
 
 function addIngredient(event) {
   event.preventDefault();
-  if ($addIngredientInput.value === '') {
+  if ($newRecipeForm.elements['add-ingredient'].value === '') {
     return;
   }
-  createAndAppendElement('li', $addIngredientInput.value, $ingredientList);
-  $addIngredientInput.value = '';
+  createAndAppendElement('li', $newRecipeForm.elements['add-ingredient'].value, $ingredientList);
+  $newRecipeForm.elements['add-ingredient'].value = '';
 }
 
 function addInstruction(event) {
   event.preventDefault();
-  if ($addInstructionInput.value === '') {
+  if ($newRecipeForm.elements['add-instruction'].value === '') {
     return;
   }
-  createAndAppendElement('li', $addInstructionInput.value, $instructionList);
-  $addInstructionInput.value = '';
+  createAndAppendElement('li', $newRecipeForm.elements['add-instruction'].value, $instructionList);
+  $newRecipeForm.elements['add-instruction'].value = '';
 }
 
 function saveRecipe(event) {
   event.preventDefault();
+  if ($newRecipeForm.elements[0].value === '' || $newRecipeForm.elements[1].value === '') {
+    return;
+  }
   var ingredients = [];
   var instructions = [];
   for (var i = 0; i < $ingredientList.children.length; i++) {
@@ -61,7 +57,11 @@ function saveRecipe(event) {
   for (var j = 0; j < $instructionList.children.length; j++) {
     instructions.push($instructionList.children[j].textContent);
   }
-  data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $recipePhotoUrlInput.value, ingredients, instructions));
+  data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
+  resetForm();
+}
+
+function resetForm() {
   $newRecipeForm.reset();
   $recipeTitle.textContent = 'New Recipe';
   $ingredientList.innerHTML = '';
@@ -69,12 +69,12 @@ function saveRecipe(event) {
   $recipePhoto.setAttribute('src', 'images/placeholder.jpg');
 }
 
-$saveButton.addEventListener('click', saveRecipe);
+$newRecipeForm.elements['save-button'].addEventListener('click', saveRecipe);
 
-$addInstructionButton.addEventListener('click', addInstruction);
+$newRecipeForm.elements['add-instruction-button'].addEventListener('click', addInstruction);
 
-$addIngredientButton.addEventListener('click', addIngredient);
+$newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIngredient);
 
-$recipePhotoUrlInput.addEventListener('input', updateRecipePhoto);
+$newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 
-$recipeTitleInput.addEventListener('input', updateRecipeTitle);
+$newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
