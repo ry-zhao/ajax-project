@@ -14,6 +14,12 @@ button:active {
   transform: translateY(5px);
 }
 
+.card-img {
+  width: 90%;
+  height: 8rem;
+  object-fit: contain;
+}
+
 .recipe-photo {
   width: 100%;
   border: 4px solid white;
@@ -38,8 +44,16 @@ button:active {
   transform: translateY(5px);
 }
 
+.hidden {
+  display: none;
+}
+
 .flex {
   display: flex;
+}
+
+.flex-direction-column {
+  flex-direction: column;
 }
 
 .flex-wrap {
@@ -58,12 +72,20 @@ button:active {
   width: 90%;
 }
 
-.width-89-percent {
-  width: 89%;
+.min-height-15rem {
+  min-height: 15rem;
+}
+
+.max-width-900px {
+  max-width: 900px;
 }
 
 .margin-auto {
   margin: auto;
+}
+
+.margin-top-p75rem {
+  margin-top: 0.75rem;
 }
 
 .margin-top-bottom-1rem {
@@ -83,12 +105,28 @@ button:active {
   margin-right: 1rem;
 }
 
+.text-align-center {
+  text-align: center;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
 .justify-content-end {
   justify-content: end;
 }
 
+.align-items-start {
+  align-items: start;
+}
+
 .align-items-center {
   align-items: center;
+}
+
+.object-fit-contain {
+  object-fit: contain;
 }
 
 .rosario {
@@ -101,6 +139,10 @@ button:active {
 
 .bg-old-lace {
   background-color: #f7f3e3;
+}
+
+.bg-white {
+  background-color: white;
 }
 
 .bistre {
