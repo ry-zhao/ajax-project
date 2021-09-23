@@ -9,6 +9,8 @@ var $views = document.querySelectorAll('.view');
 
 populateSavedRecipesView();
 
+$savedRecipesView.addEventListener('click', readRecipe);
+
 $savedRecipesLink.addEventListener('click', swapView);
 
 $newRecipeForm.elements['save-button'].addEventListener('click', saveRecipe);
@@ -20,6 +22,13 @@ $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIn
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
+
+function readRecipe(event) {
+  if (!event.target.matches('.fa-info-circle')) {
+    return;
+  }
+  swapView(event);
+}
 
 function swapView(event) {
   data.view = event.target.getAttribute('data-view');
@@ -77,6 +86,7 @@ function createAndAppendCard(recipe) {
   var $infoIcon = document.createElement('i');
   $infoIcon.className = 'fas fa-info-circle margin-right-1rem';
   $infoIcon.setAttribute('data-recipe-id', recipe.id);
+  $infoIcon.setAttribute('data-view', 'read-recipe');
   $infoAnchor.append($infoIcon);
   $infoRow.append($infoAnchor);
 
