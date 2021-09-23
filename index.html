@@ -22,23 +22,24 @@
       <div class="col-one-half">
         <div class="row">
           <div class="col-one-half flex justify-content-end">
-            <i class="fas fa-book"></i>
+            <a>
+              <i data-view="saved-recipes" id="saved-recipes-link" class="fas fa-book"></i>
+            </a>
           </div>
           <div class="col-one-half flex justify-content-end">
-            <i class="fas fa-search "></i>
+            <a>
+              <i class="fas fa-search "></i>
+            </a>
           </div>
         </div>
       </div>
     </div>
   </header>
   <main>
-    <div data-view="saved-recipes" class="margin-auto width-90-percent">
-      <div class="row bg-white min-height-15rem margin-top-bottom-1rem">
-        <div class="col-one-third"></div>
-        <div class="col-two-thirds"></div>
-      </div>
+    <div id="saved-recipes" data-view="saved-recipes" class="view margin-auto width-90-percent hidden">
+
     </div>
-    <div data-view="new-recipe" class="margin-auto width-90-percent hidden">
+    <div data-view="new-recipe" class="view margin-auto width-90-percent">
       <form id="new-recipe-form">
         <div class="row flex-wrap">
           <div class="col-full col-wide-one-third wide-margin-right-2rem">
