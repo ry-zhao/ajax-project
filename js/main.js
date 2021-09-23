@@ -57,6 +57,7 @@ function swapView(event) {
       $views[m].className = 'view margin-auto width-90-percent hidden';
     }
   }
+  window.scrollTo(0, 0);
 }
 
 function populateSavedRecipesView() {
@@ -67,7 +68,7 @@ function populateSavedRecipesView() {
 
 function createAndAppendCard(recipe) {
   var $card = document.createElement('div');
-  $card.className = 'row bg-white min-height-15rem margin-top-bottom-1rem';
+  $card.className = 'row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
   $card.setAttribute('data-recipe-id', recipe.id);
   var $colFull = document.createElement('div');
   $colFull.className = 'col-full';

@@ -76,6 +76,10 @@ button:active {
   min-height: 15rem;
 }
 
+.max-width-900px {
+  max-width: 900px;
+}
+
 .margin-auto {
   margin: auto;
 }
