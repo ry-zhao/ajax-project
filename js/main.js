@@ -231,7 +231,7 @@ function addIngredient(event) {
   if ($newRecipeForm.elements['add-ingredient'].value === '') {
     return;
   }
-  createAndAppendElement('li', $newRecipeForm.elements['add-ingredient'].value, $ingredientList);
+  $ingredientList.append(createEditItemRow($newRecipeForm.elements['add-ingredient'].value));
   $newRecipeForm.elements['add-ingredient'].value = '';
 }
 
@@ -240,7 +240,7 @@ function addInstruction(event) {
   if ($newRecipeForm.elements['add-instruction'].value === '') {
     return;
   }
-  createAndAppendElement('li', $newRecipeForm.elements['add-instruction'].value, $instructionList);
+  $instructionList.append(createEditItemRow($newRecipeForm.elements['add-instruction'].value));
   $newRecipeForm.elements['add-instruction'].value = '';
 }
 
