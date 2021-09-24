@@ -10,35 +10,40 @@ var $readRecipeTitle = document.querySelector('#read-recipe-title');
 var $readRecipePhoto = document.querySelector('#read-recipe-photo');
 var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
 var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
-
+var currentlyEditing = false;
 var currentRecipe;
 
 populateSavedRecipesView();
 
+$savedRecipesView.addEventListener('click', openEditor);
 $savedRecipesView.addEventListener('click', readRecipe);
-
 $savedRecipesLink.addEventListener('click', swapView);
-
 $newRecipeForm.elements['save-button'].addEventListener('click', saveRecipe);
-
 $newRecipeForm.elements['add-instruction-button'].addEventListener('click', addInstruction);
-
 $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIngredient);
-
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
-
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
+
+function openEditor(event) {
+  if (!event.target.matches('.fa-pen-square')) {
+    return;
+  }
+  currentlyEditing = true;
+  swapView(event);
+  findRecipe(parseInt(event.target.getAttribute('data-recipe-id')));
+  $newRecipeForm.elements.title.value = currentRecipe.title;
+  $recipeTitle.textContent = currentRecipe.title;
+  $newRecipeForm.elements['photo-url'].value = currentRecipe.photoUrl;
+  $recipePhoto.setAttribute('src', currentRecipe.photoUrl);
+  populateList(currentRecipe.ingredients, $ingredientList);
+  populateList(currentRecipe.instructions, $instructionList);
+}
 
 function readRecipe(event) {
   if (!event.target.matches('.fa-info-circle')) {
     return;
   }
-  for (var n = 0; n < data.recipes.length; n++) {
-    if (data.recipes[n].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
-      currentRecipe = data.recipes[n];
-      break;
-    }
-  }
+  findRecipe(parseInt(event.target.getAttribute('data-recipe-id')));
   $readRecipeTitle.textContent = currentRecipe.title;
   $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
   $readRecipeIngredientList.innerHTML = '';
@@ -60,13 +65,26 @@ function swapView(event) {
   window.scrollTo(0, 0);
 }
 
-function populateSavedRecipesView() {
-  for (var l = 0; l < data.recipes.length; l++) {
-    createAndAppendCard(data.recipes[l]);
+function findRecipe(id) {
+  for (var n = 0; n < data.recipes.length; n++) {
+    if (data.recipes[n].id === id) {
+      currentRecipe = data.recipes[n];
+      break;
+    }
   }
 }
 
-function createAndAppendCard(recipe) {
+function populateSavedRecipesView() {
+  for (var l = 0; l < data.recipes.length; l++) {
+    createAndPrependCard(data.recipes[l]);
+  }
+}
+
+function createAndPrependCard(recipe) {
+  $savedRecipesView.prepend(createCard(recipe));
+}
+
+function createCard(recipe) {
   var $card = document.createElement('div');
   $card.className = 'row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
   $card.setAttribute('data-recipe-id', recipe.id);
@@ -91,12 +109,10 @@ function createAndAppendCard(recipe) {
   $titleCol.append($imgRow);
   $titleCol.append($titleRow);
   $contentRow.append($titleCol);
-
   var $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
   var $ingredients = document.createElement('ul');
   populateList(recipe.ingredients, $ingredients);
-
   var $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
   var $infoAnchor = document.createElement('a');
@@ -108,21 +124,17 @@ function createAndAppendCard(recipe) {
   $editIcon.setAttribute('data-view', 'new-recipe');
   $editAnchor.append($editIcon);
   $infoRow.append($editAnchor);
-
   $infoIcon.className = 'fas fa-info-circle margin-right-1rem';
   $infoIcon.setAttribute('data-recipe-id', recipe.id);
   $infoIcon.setAttribute('data-view', 'read-recipe');
   $infoAnchor.append($infoIcon);
   $infoRow.append($infoAnchor);
-
   $ingredientCol.append($ingredients);
   $contentRow.append($ingredientCol);
-
   $colFull.append($contentRow);
   $colFull.append($infoRow);
   $card.append($colFull);
-
-  $savedRecipesView.prepend($card);
+  return $card;
 }
 
 function populateList(array, list) {
@@ -184,9 +196,24 @@ function saveRecipe(event) {
   for (var j = 0; j < $instructionList.children.length; j++) {
     instructions.push($instructionList.children[j].textContent);
   }
-  data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
-  createAndAppendCard(data.recipes[data.recipes.length - 1]);
+  if (currentlyEditing === true) {
+    currentRecipe.title = $recipeTitle.textContent;
+    currentRecipe.photoUrl = $newRecipeForm.elements['photo-url'].value;
+    currentRecipe.ingredients = ingredients;
+    currentRecipe.instructions = instructions;
+    currentlyEditing = false;
+    for (var a = 0; a < $savedRecipesView.children.length; a++) {
+      if (parseInt($savedRecipesView.children[0].getAttribute('data-recipe-id')) === currentRecipe.id) {
+        $savedRecipesView.children[a].replaceWith(createCard(currentRecipe));
+        break;
+      }
+    }
+  } else {
+    data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
+    createAndPrependCard(data.recipes[data.recipes.length - 1]);
+  }
   resetForm();
+  swapView(event);
 }
 
 function resetForm() {
