@@ -10,41 +10,80 @@ var $readRecipeTitle = document.querySelector('#read-recipe-title');
 var $readRecipePhoto = document.querySelector('#read-recipe-photo');
 var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
 var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
-
+var $listCol = document.querySelector('#list-col');
+var currentlyEditing = false;
 var currentRecipe;
 
 populateSavedRecipesView();
 
+$listCol.addEventListener('click', deleteItem);
+$listCol.addEventListener('click', saveItemEdit);
+$listCol.addEventListener('click', openItemEditor);
+$savedRecipesView.addEventListener('click', openEditor);
 $savedRecipesView.addEventListener('click', readRecipe);
-
 $savedRecipesLink.addEventListener('click', swapView);
-
 $newRecipeForm.elements['save-button'].addEventListener('click', saveRecipe);
-
 $newRecipeForm.elements['add-instruction-button'].addEventListener('click', addInstruction);
-
 $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIngredient);
-
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
-
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
+
+function deleteItem(event) {
+  if (!event.target.matches('.fa-times-circle')) {
+    return;
+  }
+  event.target.parentNode.parentNode.remove();
+}
+
+function openItemEditor(event) {
+  if (!event.target.matches('.fa-pencil-alt')) {
+    return;
+  }
+  var $editInput = document.createElement('input');
+  var $saveEditButton = document.createElement('i');
+  $editInput.className = 'width-100-percent';
+  $editInput.value = event.target.parentNode.previousSibling.children[0].textContent;
+  $saveEditButton.className = 'fas fa-check-square barn-red margin-left-1rem';
+  var $editRow = event.target.closest('.row');
+  $editRow.className = 'row margin-bottom-1rem';
+  $editRow.innerHTML = '';
+  $editRow.append($editInput, $saveEditButton);
+}
+
+function saveItemEdit(event) {
+  if (!event.target.matches('.fa-check-square')) {
+    return;
+  }
+  var $savedEditRow = event.target.closest('.row');
+  $savedEditRow.replaceWith(createEditItemRow(event.target.previousSibling.value));
+}
+
+function openEditor(event) {
+  if (!event.target.matches('.fa-pencil-alt')) {
+    return;
+  }
+  swapView(event);
+  currentlyEditing = true;
+  findRecipe(parseInt(event.target.getAttribute('data-recipe-id')));
+  $newRecipeForm.elements.title.value = currentRecipe.title;
+  $recipeTitle.textContent = currentRecipe.title;
+  $newRecipeForm.elements['photo-url'].value = currentRecipe.photoUrl;
+  $recipePhoto.setAttribute('src', currentRecipe.photoUrl);
+  populateEditList(currentRecipe.ingredients, $ingredientList);
+  populateEditList(currentRecipe.instructions, $instructionList);
+}
 
 function readRecipe(event) {
   if (!event.target.matches('.fa-info-circle')) {
     return;
   }
-  for (var n = 0; n < data.recipes.length; n++) {
-    if (data.recipes[n].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
-      currentRecipe = data.recipes[n];
-      break;
-    }
-  }
+  findRecipe(parseInt(event.target.getAttribute('data-recipe-id')));
   $readRecipeTitle.textContent = currentRecipe.title;
   $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
   $readRecipeIngredientList.innerHTML = '';
   $readRecipeInstructionList.innerHTML = '';
-  populateList(currentRecipe.ingredients, $readRecipeIngredientList);
-  populateList(currentRecipe.instructions, $readRecipeInstructionList);
+  populateViewList(currentRecipe.ingredients, $readRecipeIngredientList);
+  populateViewList(currentRecipe.instructions, $readRecipeInstructionList);
   swapView(event);
 }
 
@@ -58,15 +97,32 @@ function swapView(event) {
     }
   }
   window.scrollTo(0, 0);
+  if (currentlyEditing === true) {
+    resetForm();
+    currentlyEditing = false;
+  }
+}
+
+function findRecipe(id) {
+  for (var n = 0; n < data.recipes.length; n++) {
+    if (data.recipes[n].id === id) {
+      currentRecipe = data.recipes[n];
+      break;
+    }
+  }
 }
 
 function populateSavedRecipesView() {
   for (var l = 0; l < data.recipes.length; l++) {
-    createAndAppendCard(data.recipes[l]);
+    createAndPrependCard(data.recipes[l]);
   }
 }
 
-function createAndAppendCard(recipe) {
+function createAndPrependCard(recipe) {
+  $savedRecipesView.prepend(createCard(recipe));
+}
+
+function createCard(recipe) {
   var $card = document.createElement('div');
   $card.className = 'row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
   $card.setAttribute('data-recipe-id', recipe.id);
@@ -91,36 +147,61 @@ function createAndAppendCard(recipe) {
   $titleCol.append($imgRow);
   $titleCol.append($titleRow);
   $contentRow.append($titleCol);
-
   var $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
   var $ingredients = document.createElement('ul');
-  populateList(recipe.ingredients, $ingredients);
-
+  populateViewList(recipe.ingredients, $ingredients);
   var $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
   var $infoAnchor = document.createElement('a');
   var $infoIcon = document.createElement('i');
+  var $editAnchor = document.createElement('a');
+  var $editIcon = document.createElement('i');
+  $editIcon.className = 'fas fa-pencil-alt margin-right-1rem';
+  $editIcon.setAttribute('data-recipe-id', recipe.id);
+  $editIcon.setAttribute('data-view', 'new-recipe');
+  $editAnchor.append($editIcon);
+  $infoRow.append($editAnchor);
   $infoIcon.className = 'fas fa-info-circle margin-right-1rem';
   $infoIcon.setAttribute('data-recipe-id', recipe.id);
   $infoIcon.setAttribute('data-view', 'read-recipe');
   $infoAnchor.append($infoIcon);
   $infoRow.append($infoAnchor);
-
   $ingredientCol.append($ingredients);
   $contentRow.append($ingredientCol);
-
   $colFull.append($contentRow);
   $colFull.append($infoRow);
   $card.append($colFull);
-
-  $savedRecipesView.prepend($card);
+  return $card;
 }
 
-function populateList(array, list) {
+function populateViewList(array, list) {
   for (var k = 0; k < array.length; k++) {
     createAndAppendElement('li', array[k], list);
   }
+}
+
+function populateEditList(array, list) {
+  for (var b = 0; b < array.length; b++) {
+    list.append(createEditItemRow(array[b]));
+  }
+}
+
+function createEditItemRow(item) {
+  var $itemRow = document.createElement('div');
+  $itemRow.className = 'row';
+  var $contentCol = document.createElement('div');
+  $contentCol.className = 'col-eight-tenths';
+  createAndAppendElement('li', item, $contentCol);
+  var $iconCol = document.createElement('div');
+  $iconCol.className = 'col-two-tenths barn-red';
+  var $itemEditIcon = document.createElement('i');
+  $itemEditIcon.className = 'fas fa-pencil-alt margin-right-1rem';
+  var $itemDeleteIcon = document.createElement('i');
+  $itemDeleteIcon.className = 'far fa-times-circle';
+  $iconCol.append($itemEditIcon, $itemDeleteIcon);
+  $itemRow.append($contentCol, $iconCol);
+  return $itemRow;
 }
 
 function Recipe(id, title, photoUrl, ingredients, instructions) {
@@ -150,7 +231,7 @@ function addIngredient(event) {
   if ($newRecipeForm.elements['add-ingredient'].value === '') {
     return;
   }
-  createAndAppendElement('li', $newRecipeForm.elements['add-ingredient'].value, $ingredientList);
+  $ingredientList.append(createEditItemRow($newRecipeForm.elements['add-ingredient'].value));
   $newRecipeForm.elements['add-ingredient'].value = '';
 }
 
@@ -159,7 +240,7 @@ function addInstruction(event) {
   if ($newRecipeForm.elements['add-instruction'].value === '') {
     return;
   }
-  createAndAppendElement('li', $newRecipeForm.elements['add-instruction'].value, $instructionList);
+  $instructionList.append(createEditItemRow($newRecipeForm.elements['add-instruction'].value));
   $newRecipeForm.elements['add-instruction'].value = '';
 }
 
@@ -176,8 +257,24 @@ function saveRecipe(event) {
   for (var j = 0; j < $instructionList.children.length; j++) {
     instructions.push($instructionList.children[j].textContent);
   }
-  data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
+  if (currentlyEditing === true) {
+    currentRecipe.title = $recipeTitle.textContent;
+    currentRecipe.photoUrl = $newRecipeForm.elements['photo-url'].value;
+    currentRecipe.ingredients = ingredients;
+    currentRecipe.instructions = instructions;
+    currentlyEditing = false;
+    for (var a = 0; a < $savedRecipesView.children.length; a++) {
+      if (parseInt($savedRecipesView.children[0].getAttribute('data-recipe-id')) === currentRecipe.id) {
+        $savedRecipesView.children[a].replaceWith(createCard(currentRecipe));
+        break;
+      }
+    }
+  } else {
+    data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
+    createAndPrependCard(data.recipes[data.recipes.length - 1]);
+  }
   resetForm();
+  swapView(event);
 }
 
 function resetForm() {
