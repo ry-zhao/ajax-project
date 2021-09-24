@@ -101,6 +101,14 @@ function createAndAppendCard(recipe) {
   $infoRow.className = 'row justify-content-end';
   var $infoAnchor = document.createElement('a');
   var $infoIcon = document.createElement('i');
+  var $editAnchor = document.createElement('a');
+  var $editIcon = document.createElement('i');
+  $editIcon.className = 'fas fa-pen-square margin-right-1rem';
+  $editIcon.setAttribute('data-recipe-id', recipe.id);
+  $editIcon.setAttribute('data-view', 'new-recipe');
+  $editAnchor.append($editIcon);
+  $infoRow.append($editAnchor);
+
   $infoIcon.className = 'fas fa-info-circle margin-right-1rem';
   $infoIcon.setAttribute('data-recipe-id', recipe.id);
   $infoIcon.setAttribute('data-view', 'read-recipe');
@@ -177,6 +185,7 @@ function saveRecipe(event) {
     instructions.push($instructionList.children[j].textContent);
   }
   data.recipes.push(new Recipe(data.nextRecipeId++, $recipeTitle.textContent, $newRecipeForm.elements['photo-url'].value, ingredients, instructions));
+  createAndAppendCard(data.recipes[data.recipes.length - 1]);
   resetForm();
 }
 
