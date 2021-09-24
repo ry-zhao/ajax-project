@@ -10,8 +10,13 @@ input {
   border-radius: 5px;
 }
 
-button:active {
+button:active,
+i:active {
   transform: translateY(5px);
+}
+
+.fa-plus-circle:active {
+  transform: translateY(0);
 }
 
 .card-img {
@@ -42,6 +47,10 @@ button:active {
 
 .save-button:active {
   transform: translateY(5px);
+}
+
+.fa-check-square {
+  font-size: 2rem;
 }
 
 .hidden {

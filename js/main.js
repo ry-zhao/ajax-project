@@ -10,11 +10,15 @@ var $readRecipeTitle = document.querySelector('#read-recipe-title');
 var $readRecipePhoto = document.querySelector('#read-recipe-photo');
 var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
 var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
+var $listCol = document.querySelector('#list-col');
 var currentlyEditing = false;
 var currentRecipe;
 
 populateSavedRecipesView();
 
+$listCol.addEventListener('click', deleteItem);
+$listCol.addEventListener('click', saveItemEdit);
+$listCol.addEventListener('click', openItemEditor);
 $savedRecipesView.addEventListener('click', openEditor);
 $savedRecipesView.addEventListener('click', readRecipe);
 $savedRecipesLink.addEventListener('click', swapView);
@@ -24,12 +28,42 @@ $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIn
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
 
+function deleteItem(event) {
+  if (!event.target.matches('.fa-times-circle')) {
+    return;
+  }
+  event.target.parentNode.parentNode.remove();
+}
+
+function openItemEditor(event) {
+  if (!event.target.matches('.fa-pencil-alt')) {
+    return;
+  }
+  var $editInput = document.createElement('input');
+  var $saveEditButton = document.createElement('i');
+  $editInput.className = 'width-100-percent';
+  $editInput.value = event.target.parentNode.previousSibling.children[0].textContent;
+  $saveEditButton.className = 'fas fa-check-square barn-red margin-left-1rem';
+  var $editRow = event.target.closest('.row');
+  $editRow.className = 'row margin-bottom-1rem';
+  $editRow.innerHTML = '';
+  $editRow.append($editInput, $saveEditButton);
+}
+
+function saveItemEdit(event) {
+  if (!event.target.matches('.fa-check-square')) {
+    return;
+  }
+  var $savedEditRow = event.target.closest('.row');
+  $savedEditRow.replaceWith(createEditItemRow(event.target.previousSibling.value));
+}
+
 function openEditor(event) {
   if (!event.target.matches('.fa-pencil-alt')) {
     return;
   }
-  currentlyEditing = true;
   swapView(event);
+  currentlyEditing = true;
   findRecipe(parseInt(event.target.getAttribute('data-recipe-id')));
   $newRecipeForm.elements.title.value = currentRecipe.title;
   $recipeTitle.textContent = currentRecipe.title;
@@ -63,6 +97,10 @@ function swapView(event) {
     }
   }
   window.scrollTo(0, 0);
+  if (currentlyEditing === true) {
+    resetForm();
+    currentlyEditing = false;
+  }
 }
 
 function findRecipe(id) {
@@ -145,21 +183,25 @@ function populateViewList(array, list) {
 
 function populateEditList(array, list) {
   for (var b = 0; b < array.length; b++) {
-    var $itemRow = document.createElement('div');
-    $itemRow.className = 'row';
-    var $contentCol = document.createElement('div');
-    $contentCol.className = 'col-eight-tenths';
-    createAndAppendElement('li', array[b], $contentCol);
-    var $iconCol = document.createElement('div');
-    $iconCol.className = 'col-two-tenths barn-red';
-    var $itemEditIcon = document.createElement('i');
-    $itemEditIcon.className = 'fas fa-pencil-alt margin-right-1rem';
-    var $itemDeleteIcon = document.createElement('i');
-    $itemDeleteIcon.className = 'far fa-times-circle';
-    $iconCol.append($itemEditIcon, $itemDeleteIcon);
-    $itemRow.append($contentCol, $iconCol);
-    list.append($itemRow);
+    list.append(createEditItemRow(array[b]));
   }
+}
+
+function createEditItemRow(item) {
+  var $itemRow = document.createElement('div');
+  $itemRow.className = 'row';
+  var $contentCol = document.createElement('div');
+  $contentCol.className = 'col-eight-tenths';
+  createAndAppendElement('li', item, $contentCol);
+  var $iconCol = document.createElement('div');
+  $iconCol.className = 'col-two-tenths barn-red';
+  var $itemEditIcon = document.createElement('i');
+  $itemEditIcon.className = 'fas fa-pencil-alt margin-right-1rem';
+  var $itemDeleteIcon = document.createElement('i');
+  $itemDeleteIcon.className = 'far fa-times-circle';
+  $iconCol.append($itemEditIcon, $itemDeleteIcon);
+  $itemRow.append($contentCol, $iconCol);
+  return $itemRow;
 }
 
 function Recipe(id, title, photoUrl, ingredients, instructions) {
