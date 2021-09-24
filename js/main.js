@@ -25,7 +25,7 @@ $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
 
 function openEditor(event) {
-  if (!event.target.matches('.fa-pen-square')) {
+  if (!event.target.matches('.fa-pencil-alt')) {
     return;
   }
   currentlyEditing = true;
@@ -35,8 +35,8 @@ function openEditor(event) {
   $recipeTitle.textContent = currentRecipe.title;
   $newRecipeForm.elements['photo-url'].value = currentRecipe.photoUrl;
   $recipePhoto.setAttribute('src', currentRecipe.photoUrl);
-  populateList(currentRecipe.ingredients, $ingredientList);
-  populateList(currentRecipe.instructions, $instructionList);
+  populateEditList(currentRecipe.ingredients, $ingredientList);
+  populateEditList(currentRecipe.instructions, $instructionList);
 }
 
 function readRecipe(event) {
@@ -48,8 +48,8 @@ function readRecipe(event) {
   $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
   $readRecipeIngredientList.innerHTML = '';
   $readRecipeInstructionList.innerHTML = '';
-  populateList(currentRecipe.ingredients, $readRecipeIngredientList);
-  populateList(currentRecipe.instructions, $readRecipeInstructionList);
+  populateViewList(currentRecipe.ingredients, $readRecipeIngredientList);
+  populateViewList(currentRecipe.instructions, $readRecipeInstructionList);
   swapView(event);
 }
 
@@ -112,14 +112,14 @@ function createCard(recipe) {
   var $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
   var $ingredients = document.createElement('ul');
-  populateList(recipe.ingredients, $ingredients);
+  populateViewList(recipe.ingredients, $ingredients);
   var $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
   var $infoAnchor = document.createElement('a');
   var $infoIcon = document.createElement('i');
   var $editAnchor = document.createElement('a');
   var $editIcon = document.createElement('i');
-  $editIcon.className = 'fas fa-pen-square margin-right-1rem';
+  $editIcon.className = 'fas fa-pencil-alt margin-right-1rem';
   $editIcon.setAttribute('data-recipe-id', recipe.id);
   $editIcon.setAttribute('data-view', 'new-recipe');
   $editAnchor.append($editIcon);
@@ -137,9 +137,28 @@ function createCard(recipe) {
   return $card;
 }
 
-function populateList(array, list) {
+function populateViewList(array, list) {
   for (var k = 0; k < array.length; k++) {
     createAndAppendElement('li', array[k], list);
+  }
+}
+
+function populateEditList(array, list) {
+  for (var b = 0; b < array.length; b++) {
+    var $itemRow = document.createElement('div');
+    $itemRow.className = 'row';
+    var $contentCol = document.createElement('div');
+    $contentCol.className = 'col-eight-tenths';
+    createAndAppendElement('li', array[b], $contentCol);
+    var $iconCol = document.createElement('div');
+    $iconCol.className = 'col-two-tenths barn-red';
+    var $itemEditIcon = document.createElement('i');
+    $itemEditIcon.className = 'fas fa-pencil-alt margin-right-1rem';
+    var $itemDeleteIcon = document.createElement('i');
+    $itemDeleteIcon.className = 'far fa-times-circle';
+    $iconCol.append($itemEditIcon, $itemDeleteIcon);
+    $itemRow.append($contentCol, $iconCol);
+    list.append($itemRow);
   }
 }
 
