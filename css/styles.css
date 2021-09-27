@@ -39,7 +39,8 @@ i:active {
   background-color: #6f1a07;
 }
 
-.save-button {
+.save-button,
+.search-button {
   color: #f7f3e3;
   background-color: #a8763e;
   font-family: 'Rosario', sans-serif;
