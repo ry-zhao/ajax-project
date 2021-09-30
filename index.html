@@ -36,18 +36,18 @@
     </div>
   </header>
   <main>
-    <div data-view="search-recipes" class="view margin-auto width-90-percent hidden">
+    <div data-view="search-recipes" id="search-recipes" class="view margin-auto width-90-percent hidden">
       <div class="row">
         <div class="col-full">
           <div class="row justify-content-center">
             <h2>What's cooking?</h2>
           </div>
-          <form>
+          <form id="search-form">
             <div class="row margin-bottom-1rem">
-              <input required="required" class="width-100-percent">
+              <input name="search" required="required" class="width-100-percent">
             </div>
             <div class="row justify-content-center">
-              <input class="search-button" type="submit" value="SEARCH">
+              <input name="search-button" class="search-button" type="submit" value="SEARCH">
             </div>
           </form>
         </div>
