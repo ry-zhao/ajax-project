@@ -15,6 +15,10 @@ i:active {
   transform: translateY(5px);
 }
 
+#search-recipes .fa-pencil-alt {
+  display: none;
+}
+
 .fa-plus-circle:active {
   transform: translateY(0);
 }
@@ -67,6 +71,10 @@ i:active {
 }
 
 .flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-permanent {
   flex-wrap: wrap;
 }
 

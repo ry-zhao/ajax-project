@@ -13,7 +13,8 @@ var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-
 var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
 var $listCol = document.querySelector('#list-col');
 var $searchForm = document.querySelector('#search-form');
-var $searchRecipes = document.querySelector('#search-recipes');
+var $searchHeader = document.querySelector('#search-header');
+var $searchList = document.querySelector('#search-list');
 var currentlyEditing = false;
 var currentRecipe;
 var results;
@@ -41,22 +42,23 @@ $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
 function storeIngredients(event) {
   var ingredients = JSON.parse(event.target.response);
   var resultsIngredients = [];
-  for (var d = 0; d < ingredients.ingredients.length; d++) {
-    resultsIngredients.push(ingredients.ingredients[d].amount.us.value + ' ' + ingredients.ingredients[d].amount.us.unit + ' ' + ingredients.ingredients[d].name);
+  for (var d = 0; d < ingredients.extendedIngredients.length; d++) {
+    resultsIngredients.push(ingredients.extendedIngredients[d].original);
   }
+
   for (var e = 0; e < results.length; e++) {
-    if (results[e].id === event.target.recipeId) {
+    if (results[e].id === ingredients.id) {
       var searchCard = createCard(new Recipe(null, results[e].title, results[e].image, resultsIngredients, null));
-      $searchRecipes.append(searchCard);
+      $searchList.append(searchCard);
+      break;
     }
   }
 }
 
 function getIngredients(id) {
   var ingredientRequest = new XMLHttpRequest();
-  ingredientRequest.recipeId = id;
   ingredientRequest.addEventListener('load', storeIngredients);
-  var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/ingredientWidget.json/?apiKey=279743e11f664fc380e7ff0f067eb7a3';
+  var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   ingredientRequest.open('GET', requestUrl);
   ingredientRequest.send();
 }
@@ -70,9 +72,11 @@ function getAllResultIngredients(event) {
 
 function searchRecipes(event) {
   event.preventDefault();
+  $searchForm.className = 'hidden';
+  $searchHeader.textContent = 'Results for ' + '\'' + $searchForm.elements.search.value + '\'';
   var search = $searchForm.elements.search.value;
   search.replaceAll(' ', '+');
-  var requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=279743e11f664fc380e7ff0f067eb7a3';
+  var requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   recipeRequest.open('GET', requestUrl);
   recipeRequest.send();
 }
@@ -138,6 +142,12 @@ function readRecipe(event) {
 
 function swapView(event) {
   data.view = event.target.getAttribute('data-view');
+  if (data.view !== 'search-recipes') {
+    $searchForm.reset();
+    $searchForm.className = '';
+    $searchHeader.textContent = 'What\'s cooking?';
+    $searchList.innerHTML = '';
+  }
   for (var m = 0; m < $views.length; m++) {
     if ($views[m].getAttribute('data-view') === event.target.getAttribute('data-view')) {
       $views[m].className = 'view margin-auto width-90-percent';

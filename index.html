@@ -37,20 +37,21 @@
   </header>
   <main>
     <div data-view="search-recipes" id="search-recipes" class="view margin-auto width-90-percent hidden">
-      <div class="row">
+      <div class="row flex-wrap-permanent">
         <div class="col-full">
           <div class="row justify-content-center">
-            <h2>What's cooking?</h2>
+            <h2 id="search-header">What's cooking?</h2>
           </div>
           <form id="search-form">
-            <div class="row margin-bottom-1rem">
-              <input name="search" required="required" class="width-100-percent">
+            <div class="row margin-bottom-1rem justify-content-center">
+              <input name="search" required="required" class="width-100-percent max-width-900px">
             </div>
             <div class="row justify-content-center">
               <input name="search-button" class="search-button" type="submit" value="SEARCH">
             </div>
           </form>
         </div>
+        <div class="col-full" id="search-list"></div>
       </div>
     </div>
     <div data-view="read-recipe" class="view margin-auto width-90-percent hidden">
