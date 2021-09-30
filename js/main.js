@@ -4,6 +4,7 @@ var $recipePhoto = document.querySelector('#recipe-photo');
 var $ingredientList = document.querySelector('#ingredient-list');
 var $instructionList = document.querySelector('#instruction-list');
 var $savedRecipesView = document.querySelector('#saved-recipes');
+var $searchRecipesLink = document.querySelector('#search-recipes-link');
 var $savedRecipesLink = document.querySelector('#saved-recipes-link');
 var $views = document.querySelectorAll('.view');
 var $readRecipeTitle = document.querySelector('#read-recipe-title');
@@ -11,10 +12,20 @@ var $readRecipePhoto = document.querySelector('#read-recipe-photo');
 var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
 var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
 var $listCol = document.querySelector('#list-col');
+var $searchForm = document.querySelector('#search-form');
+var $searchHeader = document.querySelector('#search-header');
+var $searchList = document.querySelector('#search-list');
 var currentlyEditing = false;
 var currentRecipe;
+var results;
+
+var recipeRequest = new XMLHttpRequest();
+recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
+
+$searchForm.elements['search-button'].addEventListener('click', searchRecipes);
+recipeRequest.addEventListener('load', getAllResultIngredients);
 
 $listCol.addEventListener('click', deleteItem);
 $listCol.addEventListener('click', saveItemEdit);
@@ -22,11 +33,55 @@ $listCol.addEventListener('click', openItemEditor);
 $savedRecipesView.addEventListener('click', openEditor);
 $savedRecipesView.addEventListener('click', readRecipe);
 $savedRecipesLink.addEventListener('click', swapView);
+$searchRecipesLink.addEventListener('click', swapView);
 $newRecipeForm.elements['save-button'].addEventListener('click', saveRecipe);
 $newRecipeForm.elements['add-instruction-button'].addEventListener('click', addInstruction);
 $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIngredient);
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
+
+function storeIngredients(event) {
+  var ingredients = event.target.response;
+  var resultsIngredients = [];
+  for (var d = 0; d < ingredients.extendedIngredients.length; d++) {
+    resultsIngredients.push(ingredients.extendedIngredients[d].original);
+  }
+
+  for (var e = 0; e < results.length; e++) {
+    if (results[e].id === ingredients.id) {
+      var searchCard = createCard(new Recipe(null, results[e].title, results[e].image, resultsIngredients, null));
+      $searchList.append(searchCard);
+      break;
+    }
+  }
+}
+
+function getIngredients(id) {
+  var ingredientRequest = new XMLHttpRequest();
+  ingredientRequest.responseType = 'json';
+  ingredientRequest.addEventListener('load', storeIngredients);
+  var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
+  ingredientRequest.open('GET', requestUrl);
+  ingredientRequest.send();
+}
+
+function getAllResultIngredients(event) {
+  results = recipeRequest.response.results;
+  for (var c = 0; c < results.length; c++) {
+    getIngredients(results[c].id);
+  }
+}
+
+function searchRecipes(event) {
+  event.preventDefault();
+  $searchForm.className = 'hidden';
+  $searchHeader.textContent = 'Results for ' + '\'' + $searchForm.elements.search.value + '\'';
+  var search = $searchForm.elements.search.value;
+  search.replaceAll(' ', '+');
+  var requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=c475d73092264cd4b28197f6d76d4ce5';
+  recipeRequest.open('GET', requestUrl);
+  recipeRequest.send();
+}
 
 function deleteItem(event) {
   if (!event.target.matches('.fa-times-circle')) {
@@ -89,6 +144,12 @@ function readRecipe(event) {
 
 function swapView(event) {
   data.view = event.target.getAttribute('data-view');
+  if (data.view !== 'search-recipes') {
+    $searchForm.reset();
+    $searchForm.className = '';
+    $searchHeader.textContent = 'What\'s cooking?';
+    $searchList.innerHTML = '';
+  }
   for (var m = 0; m < $views.length; m++) {
     if ($views[m].getAttribute('data-view') === event.target.getAttribute('data-view')) {
       $views[m].className = 'view margin-auto width-90-percent';
@@ -246,9 +307,6 @@ function addInstruction(event) {
 
 function saveRecipe(event) {
   event.preventDefault();
-  if ($newRecipeForm.elements[0].value === '' || $newRecipeForm.elements[1].value === '') {
-    return;
-  }
   var ingredients = [];
   var instructions = [];
   for (var i = 0; i < $ingredientList.children.length; i++) {
