@@ -20,6 +20,7 @@ var currentRecipe;
 var results;
 
 var recipeRequest = new XMLHttpRequest();
+recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
 
@@ -40,7 +41,7 @@ $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
 
 function storeIngredients(event) {
-  var ingredients = JSON.parse(event.target.response);
+  var ingredients = event.target.response;
   var resultsIngredients = [];
   for (var d = 0; d < ingredients.extendedIngredients.length; d++) {
     resultsIngredients.push(ingredients.extendedIngredients[d].original);
@@ -57,6 +58,7 @@ function storeIngredients(event) {
 
 function getIngredients(id) {
   var ingredientRequest = new XMLHttpRequest();
+  ingredientRequest.responseType = 'json';
   ingredientRequest.addEventListener('load', storeIngredients);
   var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   ingredientRequest.open('GET', requestUrl);
@@ -64,7 +66,7 @@ function getIngredients(id) {
 }
 
 function getAllResultIngredients(event) {
-  results = JSON.parse(recipeRequest.response).results;
+  results = recipeRequest.response.results;
   for (var c = 0; c < results.length; c++) {
     getIngredients(results[c].id);
   }
