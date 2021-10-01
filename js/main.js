@@ -24,6 +24,7 @@ recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
 
+$copyRecipeButton.addEventListener('click', swapView);
 $searchList.addEventListener('click', openRecipeFromSearchList);
 $searchForm.elements['search-button'].addEventListener('click', searchRecipes);
 recipeRequest.addEventListener('load', getAllResultIngredients);
