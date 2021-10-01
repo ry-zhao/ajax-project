@@ -15,6 +15,7 @@ var $listCol = document.querySelector('#list-col');
 var $searchForm = document.querySelector('#search-form');
 var $searchHeader = document.querySelector('#search-header');
 var $searchList = document.querySelector('#search-list');
+var $copyRecipeButton = document.querySelector('.copy-recipe-button');
 var currentlyEditing = false;
 var currentRecipe;
 var results;
@@ -51,17 +52,18 @@ function openRecipeFromSearchList(event) {
   var ingredientRequest = new XMLHttpRequest();
   var requestUrl = 'https://api.spoonacular.com/recipes/' + currentRecipe.id + '/analyzedInstructions/?apiKey=279743e11f664fc380e7ff0f067eb7a3';
   ingredientRequest.open('GET', requestUrl);
-  ingredientRequest.addEventListener('load', populateRecipeView);
+  ingredientRequest.addEventListener('load', populateViewWithSearchRecipe);
   ingredientRequest.responseType = 'json';
   ingredientRequest.send();
   swapView(event);
 }
 
-function populateRecipeView(event) {
+function populateViewWithSearchRecipe(event) {
   $readRecipeTitle.textContent = currentRecipe.title;
   $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
   $readRecipeIngredientList.innerHTML = '';
   $readRecipeInstructionList.innerHTML = '';
+  $copyRecipeButton.className = 'copy-recipe-button';
   populateViewList(currentRecipe.ingredients, $readRecipeIngredientList);
   for (var g = 0; g < event.target.response[0].steps.length; g++) {
     currentRecipe.instructions.push(event.target.response[0].steps[g].step);
@@ -192,6 +194,7 @@ function swapView(event) {
     resetForm();
     currentlyEditing = false;
   }
+  $copyRecipeButton.className = 'copy-recipe-button hidden';
 }
 
 function findRecipe(id) {

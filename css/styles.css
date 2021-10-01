@@ -19,6 +19,19 @@ i:active {
   display: none;
 }
 
+.copy-recipe-button {
+  display: block;
+  text-align: center;
+  padding: 0.25rem;
+  background-color: #6f1a07;
+  color: #f7f3e3;
+  border-radius: 5px;
+}
+
+.copy-recipe-button:active {
+  transform: translateY(5px);
+}
+
 .fa-plus-circle:active {
   transform: translateY(0);
 }
