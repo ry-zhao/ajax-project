@@ -24,7 +24,7 @@ recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
 
-$copyRecipeButton.addEventListener('click', swapView);
+$copyRecipeButton.addEventListener('click', copyRecipe);
 $searchList.addEventListener('click', openRecipeFromSearchList);
 $searchForm.elements['search-button'].addEventListener('click', searchRecipes);
 recipeRequest.addEventListener('load', getAllResultIngredients);
@@ -40,6 +40,16 @@ $newRecipeForm.elements['add-instruction-button'].addEventListener('click', addI
 $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIngredient);
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
+
+function copyRecipe(event) {
+  swapView(event);
+  $recipeTitle.textContent = currentRecipe.title;
+  $recipePhoto.setAttribute('src', currentRecipe.photoUrl);
+  $newRecipeForm.elements.title.value = currentRecipe.title;
+  $newRecipeForm.elements['photo-url'].value = currentRecipe.photoUrl;
+  populateEditList(currentRecipe.ingredients, $ingredientList);
+  populateEditList(currentRecipe.instructions, $instructionList);
+}
 
 function openRecipeFromSearchList(event) {
   if (!event.target.matches('.fa-info-circle')) {
