@@ -18,15 +18,14 @@ var $searchList = document.querySelector('#search-list');
 var currentlyEditing = false;
 var currentRecipe;
 var results;
-
 var recipeRequest = new XMLHttpRequest();
 recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
 
+$searchList.addEventListener('click', openRecipeFromSearchList);
 $searchForm.elements['search-button'].addEventListener('click', searchRecipes);
 recipeRequest.addEventListener('load', getAllResultIngredients);
-
 $listCol.addEventListener('click', deleteItem);
 $listCol.addEventListener('click', saveItemEdit);
 $listCol.addEventListener('click', openItemEditor);
@@ -40,7 +39,37 @@ $newRecipeForm.elements['add-ingredient-button'].addEventListener('click', addIn
 $newRecipeForm.elements['photo-url'].addEventListener('input', updateRecipePhoto);
 $newRecipeForm.elements.title.addEventListener('input', updateRecipeTitle);
 
-function storeIngredients(event) {
+function openRecipeFromSearchList(event) {
+  if (!event.target.matches('.fa-info-circle')) {
+    return;
+  }
+  for (var f = 0; f < results.length; f++) {
+    if (results[f].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
+      currentRecipe = results[f];
+    }
+  }
+  var ingredientRequest = new XMLHttpRequest();
+  var requestUrl = 'https://api.spoonacular.com/recipes/' + currentRecipe.id + '/analyzedInstructions/?apiKey=279743e11f664fc380e7ff0f067eb7a3';
+  ingredientRequest.open('GET', requestUrl);
+  ingredientRequest.addEventListener('load', populateRecipeView);
+  ingredientRequest.responseType = 'json';
+  ingredientRequest.send();
+  swapView(event);
+}
+
+function populateRecipeView(event) {
+  $readRecipeTitle.textContent = currentRecipe.title;
+  $readRecipePhoto.setAttribute('src', currentRecipe.photoUrl);
+  $readRecipeIngredientList.innerHTML = '';
+  $readRecipeInstructionList.innerHTML = '';
+  populateViewList(currentRecipe.ingredients, $readRecipeIngredientList);
+  for (var g = 0; g < event.target.response[0].steps.length; g++) {
+    currentRecipe.instructions.push(event.target.response[0].steps[g].step);
+  }
+  populateViewList(currentRecipe.instructions, $readRecipeInstructionList);
+}
+
+function populateSearchList(event) {
   var ingredients = event.target.response;
   var resultsIngredients = [];
   for (var d = 0; d < ingredients.extendedIngredients.length; d++) {
@@ -49,7 +78,8 @@ function storeIngredients(event) {
 
   for (var e = 0; e < results.length; e++) {
     if (results[e].id === ingredients.id) {
-      var searchCard = createCard(new Recipe(null, results[e].title, results[e].image, resultsIngredients, null));
+      results[e] = new Recipe(results[e].id, results[e].title, results[e].image, resultsIngredients, []);
+      var searchCard = createCard(results[e]);
       $searchList.append(searchCard);
       break;
     }
@@ -59,7 +89,7 @@ function storeIngredients(event) {
 function getIngredients(id) {
   var ingredientRequest = new XMLHttpRequest();
   ingredientRequest.responseType = 'json';
-  ingredientRequest.addEventListener('load', storeIngredients);
+  ingredientRequest.addEventListener('load', populateSearchList);
   var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   ingredientRequest.open('GET', requestUrl);
   ingredientRequest.send();
@@ -185,7 +215,7 @@ function createAndPrependCard(recipe) {
 
 function createCard(recipe) {
   var $card = document.createElement('div');
-  $card.className = 'row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
+  $card.className = 'card row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
   $card.setAttribute('data-recipe-id', recipe.id);
   var $colFull = document.createElement('div');
   $colFull.className = 'col-full';
@@ -211,6 +241,7 @@ function createCard(recipe) {
   var $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
   var $ingredients = document.createElement('ul');
+  $ingredients.className = 'card-ingredients';
   populateViewList(recipe.ingredients, $ingredients);
   var $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
