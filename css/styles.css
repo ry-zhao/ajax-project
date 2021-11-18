@@ -10,6 +10,13 @@ input {
   border-radius: 5px;
 }
 
+button,
+i,
+a,
+input[type="submit"] {
+  cursor: pointer;
+}
+
 button:active,
 i:active {
   transform: translateY(5px);
@@ -185,7 +192,7 @@ i:active {
   color: #6f1a07;
 }
 
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 768px) {
   .flex-wrap {
     flex-wrap: nowrap;
   }

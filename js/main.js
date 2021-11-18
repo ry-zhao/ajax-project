@@ -1,25 +1,25 @@
-var $newRecipeForm = document.querySelector('#new-recipe-form');
-var $recipeTitle = document.querySelector('#recipe-title');
-var $recipePhoto = document.querySelector('#recipe-photo');
-var $ingredientList = document.querySelector('#ingredient-list');
-var $instructionList = document.querySelector('#instruction-list');
-var $savedRecipesView = document.querySelector('#saved-recipes');
-var $searchRecipesLink = document.querySelector('#search-recipes-link');
-var $savedRecipesLink = document.querySelector('#saved-recipes-link');
-var $views = document.querySelectorAll('.view');
-var $readRecipeTitle = document.querySelector('#read-recipe-title');
-var $readRecipePhoto = document.querySelector('#read-recipe-photo');
-var $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
-var $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
-var $listCol = document.querySelector('#list-col');
-var $searchForm = document.querySelector('#search-form');
-var $searchHeader = document.querySelector('#search-header');
-var $searchList = document.querySelector('#search-list');
-var $copyRecipeButton = document.querySelector('.copy-recipe-button');
-var currentlyEditing = false;
-var currentRecipe;
-var results;
-var recipeRequest = new XMLHttpRequest();
+const $newRecipeForm = document.querySelector('#new-recipe-form');
+const $recipeTitle = document.querySelector('#recipe-title');
+const $recipePhoto = document.querySelector('#recipe-photo');
+const $ingredientList = document.querySelector('#ingredient-list');
+const $instructionList = document.querySelector('#instruction-list');
+const $savedRecipesView = document.querySelector('#saved-recipes');
+const $searchRecipesLink = document.querySelector('#search-recipes-link');
+const $savedRecipesLink = document.querySelector('#saved-recipes-link');
+const $views = document.querySelectorAll('.view');
+const $readRecipeTitle = document.querySelector('#read-recipe-title');
+const $readRecipePhoto = document.querySelector('#read-recipe-photo');
+const $readRecipeIngredientList = document.querySelector('#read-recipe-ingredient-list');
+const $readRecipeInstructionList = document.querySelector('#read-recipe-instruction-list');
+const $listCol = document.querySelector('#list-col');
+const $searchForm = document.querySelector('#search-form');
+const $searchHeader = document.querySelector('#search-header');
+const $searchList = document.querySelector('#search-list');
+const $copyRecipeButton = document.querySelector('.copy-recipe-button');
+let currentlyEditing = false;
+let currentRecipe;
+let results;
+const recipeRequest = new XMLHttpRequest();
 recipeRequest.responseType = 'json';
 
 populateSavedRecipesView();
@@ -55,13 +55,13 @@ function openRecipeFromSearchList(event) {
   if (!event.target.matches('.fa-info-circle')) {
     return;
   }
-  for (var f = 0; f < results.length; f++) {
-    if (results[f].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
-      currentRecipe = results[f];
+  for (let i = 0; i < results.length; i++) {
+    if (results[i].id === parseInt(event.target.getAttribute('data-recipe-id'))) {
+      currentRecipe = results[i];
     }
   }
-  var ingredientRequest = new XMLHttpRequest();
-  var requestUrl = 'https://api.spoonacular.com/recipes/' + currentRecipe.id + '/analyzedInstructions/?apiKey=279743e11f664fc380e7ff0f067eb7a3';
+  const ingredientRequest = new XMLHttpRequest();
+  const requestUrl = 'https://api.spoonacular.com/recipes/' + currentRecipe.id + '/analyzedInstructions/?apiKey=279743e11f664fc380e7ff0f067eb7a3';
   ingredientRequest.open('GET', requestUrl);
   ingredientRequest.addEventListener('load', populateViewWithSearchRecipe);
   ingredientRequest.responseType = 'json';
@@ -76,8 +76,8 @@ function populateViewWithSearchRecipe(event) {
   $readRecipeInstructionList.innerHTML = '';
   $copyRecipeButton.className = 'copy-recipe-button';
   populateViewList(currentRecipe.ingredients, $readRecipeIngredientList);
-  for (var g = 0; g < event.target.response[0].steps.length; g++) {
-    currentRecipe.instructions.push(event.target.response[0].steps[g].step);
+  for (let i = 0; i < event.target.response[0].steps.length; i++) {
+    currentRecipe.instructions.push(event.target.response[0].steps[i].step);
   }
   populateViewList(currentRecipe.instructions, $readRecipeInstructionList);
 }
@@ -89,10 +89,10 @@ function populateSearchList(event) {
     resultsIngredients.push(ingredients.extendedIngredients[d].original);
   }
 
-  for (var e = 0; e < results.length; e++) {
-    if (results[e].id === ingredients.id) {
-      results[e] = new Recipe(results[e].id, results[e].title, results[e].image, resultsIngredients, []);
-      var searchCard = createCard(results[e]);
+  for (let i = 0; i < results.length; i++) {
+    if (results[i].id === ingredients.id) {
+      results[i] = new Recipe(results[i].id, results[i].title, results[i].image, resultsIngredients, []);
+      var searchCard = createCard(results[i]);
       $searchList.append(searchCard);
       break;
     }
@@ -110,8 +110,8 @@ function getIngredients(id) {
 
 function getAllResultIngredients(event) {
   results = recipeRequest.response.results;
-  for (var c = 0; c < results.length; c++) {
-    getIngredients(results[c].id);
+  for (let i = 0; i < results.length; i++) {
+    getIngredients(results[i].id);
   }
 }
 
@@ -119,9 +119,9 @@ function searchRecipes(event) {
   event.preventDefault();
   $searchForm.className = 'hidden';
   $searchHeader.textContent = 'Results for ' + '\'' + $searchForm.elements.search.value + '\'';
-  var search = $searchForm.elements.search.value;
+  const search = $searchForm.elements.search.value;
   search.replaceAll(' ', '+');
-  var requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=c475d73092264cd4b28197f6d76d4ce5';
+  const requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   recipeRequest.open('GET', requestUrl);
   recipeRequest.send();
 }
@@ -193,11 +193,11 @@ function swapView(event) {
     $searchHeader.textContent = 'What\'s cooking?';
     $searchList.innerHTML = '';
   }
-  for (var m = 0; m < $views.length; m++) {
-    if ($views[m].getAttribute('data-view') === event.target.getAttribute('data-view')) {
-      $views[m].className = 'view margin-auto width-90-percent';
+  for (let i = 0; i < $views.length; i++) {
+    if ($views[i].getAttribute('data-view') === event.target.getAttribute('data-view')) {
+      $views[i].className = 'view margin-auto width-90-percent';
     } else {
-      $views[m].className = 'view margin-auto width-90-percent hidden';
+      $views[i].className = 'view margin-auto width-90-percent hidden';
     }
   }
   window.scrollTo(0, 0);
@@ -209,17 +209,17 @@ function swapView(event) {
 }
 
 function findRecipe(id) {
-  for (var n = 0; n < data.recipes.length; n++) {
-    if (data.recipes[n].id === id) {
-      currentRecipe = data.recipes[n];
+  for (let i = 0; i < data.recipes.length; i++) {
+    if (data.recipes[i].id === id) {
+      currentRecipe = data.recipes[i];
       break;
     }
   }
 }
 
 function populateSavedRecipesView() {
-  for (var l = 0; l < data.recipes.length; l++) {
-    createAndPrependCard(data.recipes[l]);
+  for (let i = 0; i < data.recipes.length; i++) {
+    createAndPrependCard(data.recipes[i]);
   }
 }
 
@@ -228,41 +228,41 @@ function createAndPrependCard(recipe) {
 }
 
 function createCard(recipe) {
-  var $card = document.createElement('div');
+  const $card = document.createElement('div');
   $card.className = 'card row bg-white min-height-15rem margin-top-bottom-1rem max-width-900px margin-auto';
   $card.setAttribute('data-recipe-id', recipe.id);
-  var $colFull = document.createElement('div');
+  const $colFull = document.createElement('div');
   $colFull.className = 'col-full';
-  var $contentRow = document.createElement('div');
+  const $contentRow = document.createElement('div');
   $contentRow.className = 'row width-100-percent';
-  var $titleCol = document.createElement('div');
+  const $titleCol = document.createElement('div');
   $titleCol.className = 'col-one-half';
-  var $imgRow = document.createElement('div');
+  const $imgRow = document.createElement('div');
   $imgRow.className = 'row justify-content-center';
-  var $img = document.createElement('img');
+  const $img = document.createElement('img');
   $img.className = 'card-img margin-top-p75rem';
   $img.setAttribute('src', recipe.photoUrl);
   $imgRow.append($img);
-  var $titleRow = document.createElement('div');
+  const $titleRow = document.createElement('div');
   $titleRow.className = 'row justify-content-center';
-  var $title = document.createElement('h2');
+  const $title = document.createElement('h2');
   $title.className = 'text-align-center';
   $title.textContent = recipe.title;
   $titleRow.append($title);
   $titleCol.append($imgRow);
   $titleCol.append($titleRow);
   $contentRow.append($titleCol);
-  var $ingredientCol = document.createElement('div');
+  const $ingredientCol = document.createElement('div');
   $ingredientCol.className = 'col-one-half flex align-items-center';
-  var $ingredients = document.createElement('ul');
+  const $ingredients = document.createElement('ul');
   $ingredients.className = 'card-ingredients';
   populateViewList(recipe.ingredients, $ingredients);
-  var $infoRow = document.createElement('div');
+  const $infoRow = document.createElement('div');
   $infoRow.className = 'row justify-content-end';
-  var $infoAnchor = document.createElement('a');
-  var $infoIcon = document.createElement('i');
-  var $editAnchor = document.createElement('a');
-  var $editIcon = document.createElement('i');
+  const $infoAnchor = document.createElement('a');
+  const $infoIcon = document.createElement('i');
+  const $editAnchor = document.createElement('a');
+  const $editIcon = document.createElement('i');
   $editIcon.className = 'fas fa-pencil-alt margin-right-1rem';
   $editIcon.setAttribute('data-recipe-id', recipe.id);
   $editIcon.setAttribute('data-view', 'new-recipe');
@@ -282,28 +282,28 @@ function createCard(recipe) {
 }
 
 function populateViewList(array, list) {
-  for (var k = 0; k < array.length; k++) {
-    createAndAppendElement('li', array[k], list);
+  for (let i = 0; i < array.length; i++) {
+    createAndAppendElement('li', array[i], list);
   }
 }
 
 function populateEditList(array, list) {
-  for (var b = 0; b < array.length; b++) {
-    list.append(createEditItemRow(array[b]));
+  for (let i = 0; i < array.length; i++) {
+    list.append(createEditItemRow(array[i]));
   }
 }
 
 function createEditItemRow(item) {
-  var $itemRow = document.createElement('div');
+  const $itemRow = document.createElement('div');
   $itemRow.className = 'row';
-  var $contentCol = document.createElement('div');
+  const $contentCol = document.createElement('div');
   $contentCol.className = 'col-eight-tenths';
   createAndAppendElement('li', item, $contentCol);
-  var $iconCol = document.createElement('div');
+  const $iconCol = document.createElement('div');
   $iconCol.className = 'col-two-tenths barn-red';
-  var $itemEditIcon = document.createElement('i');
+  const $itemEditIcon = document.createElement('i');
   $itemEditIcon.className = 'fas fa-pencil-alt margin-right-1rem';
-  var $itemDeleteIcon = document.createElement('i');
+  const $itemDeleteIcon = document.createElement('i');
   $itemDeleteIcon.className = 'far fa-times-circle';
   $iconCol.append($itemEditIcon, $itemDeleteIcon);
   $itemRow.append($contentCol, $iconCol);
@@ -327,7 +327,7 @@ function updateRecipePhoto(event) {
 }
 
 function createAndAppendElement(type, textContent, parent) {
-  var newElement = document.createElement(type);
+  const newElement = document.createElement(type);
   newElement.textContent = textContent;
   parent.append(newElement);
 }
@@ -352,13 +352,13 @@ function addInstruction(event) {
 
 function saveRecipe(event) {
   event.preventDefault();
-  var ingredients = [];
-  var instructions = [];
-  for (var i = 0; i < $ingredientList.children.length; i++) {
+  const ingredients = [];
+  const instructions = [];
+  for (let i = 0; i < $ingredientList.children.length; i++) {
     ingredients.push($ingredientList.children[i].textContent);
   }
-  for (var j = 0; j < $instructionList.children.length; j++) {
-    instructions.push($instructionList.children[j].textContent);
+  for (let i = 0; i < $instructionList.children.length; i++) {
+    instructions.push($instructionList.children[i].textContent);
   }
   if (currentlyEditing === true) {
     currentRecipe.title = $recipeTitle.textContent;
