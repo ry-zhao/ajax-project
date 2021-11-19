@@ -16,6 +16,7 @@ const $searchForm = document.querySelector('#search-form');
 const $searchHeader = document.querySelector('#search-header');
 const $searchList = document.querySelector('#search-list');
 const $copyRecipeButton = document.querySelector('.copy-recipe-button');
+const $spinner = document.querySelector('.lds-spinner');
 let currentlyEditing = false;
 let currentRecipe;
 let results;
@@ -28,6 +29,7 @@ $copyRecipeButton.addEventListener('click', copyRecipe);
 $searchList.addEventListener('click', openRecipeFromSearchList);
 $searchForm.elements['search-button'].addEventListener('click', searchRecipes);
 recipeRequest.addEventListener('load', getAllResultIngredients);
+recipeRequest.onerror = displayError;
 $listCol.addEventListener('click', deleteItem);
 $listCol.addEventListener('click', saveItemEdit);
 $listCol.addEventListener('click', openItemEditor);
@@ -109,7 +111,13 @@ function getIngredients(id) {
 }
 
 function getAllResultIngredients(event) {
+  $spinner.className = 'lds-spinner hidden';
   results = recipeRequest.response.results;
+  if (results.length === 0) {
+    $searchHeader.textContent = 'No results for ' + '\'' + $searchForm.elements.search.value + '\'.';
+    return;
+  }
+  $searchHeader.textContent = 'Results for ' + '\'' + $searchForm.elements.search.value + '\'';
   for (let i = 0; i < results.length; i++) {
     getIngredients(results[i].id);
   }
@@ -118,7 +126,8 @@ function getAllResultIngredients(event) {
 function searchRecipes(event) {
   event.preventDefault();
   $searchForm.className = 'hidden';
-  $searchHeader.textContent = 'Results for ' + '\'' + $searchForm.elements.search.value + '\'';
+  $searchHeader.textContent = '';
+  $spinner.className = 'lds-spinner';
   const search = $searchForm.elements.search.value;
   search.replaceAll(' ', '+');
   const requestUrl = 'https://api.spoonacular.com/recipes/complexSearch?query=' + search + '&apiKey=c475d73092264cd4b28197f6d76d4ce5';
@@ -386,4 +395,9 @@ function resetForm() {
   $ingredientList.innerHTML = '';
   $instructionList.innerHTML = '';
   $recipePhoto.setAttribute('src', 'images/placeholder.jpg');
+}
+
+function displayError() {
+  $spinner.className = 'lds-spinner hidden';
+  $searchHeader.textContent = 'Sorry! There was an error connecting to the network! Please check your internet connection and try again.';
 }
