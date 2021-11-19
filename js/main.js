@@ -85,16 +85,16 @@ function populateViewWithSearchRecipe(event) {
 }
 
 function populateSearchList(event) {
-  var ingredients = event.target.response;
-  var resultsIngredients = [];
-  for (var d = 0; d < ingredients.extendedIngredients.length; d++) {
-    resultsIngredients.push(ingredients.extendedIngredients[d].original);
+  const ingredients = event.target.response;
+  const resultsIngredients = [];
+  for (let i = 0; i < ingredients.extendedIngredients.length; i++) {
+    resultsIngredients.push(ingredients.extendedIngredients[i].original);
   }
 
   for (let i = 0; i < results.length; i++) {
     if (results[i].id === ingredients.id) {
       results[i] = new Recipe(results[i].id, results[i].title, results[i].image, resultsIngredients, []);
-      var searchCard = createCard(results[i]);
+      const searchCard = createCard(results[i]);
       $searchList.append(searchCard);
       break;
     }
@@ -102,10 +102,10 @@ function populateSearchList(event) {
 }
 
 function getIngredients(id) {
-  var ingredientRequest = new XMLHttpRequest();
+  const ingredientRequest = new XMLHttpRequest();
   ingredientRequest.responseType = 'json';
   ingredientRequest.addEventListener('load', populateSearchList);
-  var requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
+  const requestUrl = 'https://api.spoonacular.com/recipes/' + id + '/information?includeNutrition=false&apiKey=c475d73092264cd4b28197f6d76d4ce5';
   ingredientRequest.open('GET', requestUrl);
   ingredientRequest.send();
 }
@@ -146,12 +146,12 @@ function openItemEditor(event) {
   if (!event.target.matches('.fa-pencil-alt')) {
     return;
   }
-  var $editInput = document.createElement('input');
-  var $saveEditButton = document.createElement('i');
+  const $editInput = document.createElement('input');
+  const $saveEditButton = document.createElement('i');
   $editInput.className = 'width-100-percent';
   $editInput.value = event.target.parentNode.previousSibling.children[0].textContent;
   $saveEditButton.className = 'fas fa-check-square barn-red margin-left-1rem';
-  var $editRow = event.target.closest('.row');
+  const $editRow = event.target.closest('.row');
   $editRow.className = 'row margin-bottom-1rem';
   $editRow.innerHTML = '';
   $editRow.append($editInput, $saveEditButton);
@@ -161,7 +161,7 @@ function saveItemEdit(event) {
   if (!event.target.matches('.fa-check-square')) {
     return;
   }
-  var $savedEditRow = event.target.closest('.row');
+  const $savedEditRow = event.target.closest('.row');
   $savedEditRow.replaceWith(createEditItemRow(event.target.previousSibling.value));
 }
 
@@ -375,9 +375,9 @@ function saveRecipe(event) {
     currentRecipe.ingredients = ingredients;
     currentRecipe.instructions = instructions;
     currentlyEditing = false;
-    for (var a = 0; a < $savedRecipesView.children.length; a++) {
+    for (let i = 0; i < $savedRecipesView.children.length; i++) {
       if (parseInt($savedRecipesView.children[0].getAttribute('data-recipe-id')) === currentRecipe.id) {
-        $savedRecipesView.children[a].replaceWith(createCard(currentRecipe));
+        $savedRecipesView.children[i].replaceWith(createCard(currentRecipe));
         break;
       }
     }
