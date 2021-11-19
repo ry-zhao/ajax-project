@@ -387,6 +387,7 @@ function saveRecipe(event) {
   }
   resetForm();
   swapView(event);
+  updateData();
 }
 
 function resetForm() {
@@ -400,4 +401,8 @@ function resetForm() {
 function displayError() {
   $spinner.className = 'lds-spinner hidden';
   $searchHeader.textContent = 'Sorry! There was an error connecting to the network! Please check your internet connection and try again.';
+}
+
+function updateData(event) {
+  localStorage.setItem('data', JSON.stringify(data));
 }
