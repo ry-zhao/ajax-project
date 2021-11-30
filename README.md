@@ -58,3 +58,5 @@ Try the application live at [https://ry-zhao.github.io/ajax-project/]
     ```shell
     npm install
     ```
+
+3. Open index.html in browser.
