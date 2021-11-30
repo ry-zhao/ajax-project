@@ -27,7 +27,34 @@ Try the application live at [https://ry-zhao.github.io/ajax-project/]
 - User can search recipes
 - User can copy and save recipes
 
+## Stretch Features
+
+- User can delete recipe
+- User can add note to recipes
+- User can rearrange items on recipe lists
+
 ## Preview
 
 ![Searching for and saving recipe](demo/kg-demo.gif)
 ![Editing saved recipe](demo/kg-demo-2.gif)
+
+## Development
+
+### System Requirements
+
+-npm 6 or higher
+
+### Getting Started
+
+1. Clone the repository.
+
+    ```shell
+    git clone https://github.com/ry-zhao/ajax-project/
+    cd ajax-project
+    ```
+
+2. Install all dependencies with npm.
+
+    ```shell
+    npm install
+    ```
