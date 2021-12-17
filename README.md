@@ -49,8 +49,8 @@ Try the application live at [https://ry-zhao.github.io/ajax-project/]
 1. Clone the repository.
 
     ```shell
-    git clone https://github.com/ry-zhao/ajax-project/
-    cd ajax-project
+    git clone https://github.com/ry-zhao/kitchengod-io/
+    cd kitchengod-io
     ```
 
 2. Install all dependencies with npm.
