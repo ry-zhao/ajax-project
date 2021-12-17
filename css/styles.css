@@ -21,7 +21,7 @@ input[type="submit"] {
 }
 
 button:active,
-i:active {
+a:active {
   transform: translateY(5px);
 }
 
